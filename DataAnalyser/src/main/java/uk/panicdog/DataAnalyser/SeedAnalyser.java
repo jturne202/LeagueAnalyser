@@ -20,7 +20,7 @@ public class SeedAnalyser {
 
     private JSONReader jr = new JSONReader();
 
-    public double getMean (ArrayList<Integer> stat){
+    private double getMean(ArrayList<Integer> stat){
         int sum = 0;
 
         for (Integer aStat : stat) sum += aStat;
@@ -28,7 +28,7 @@ public class SeedAnalyser {
         return (double) sum / (double) stat.size();
     }
 
-    public int getMedian(ArrayList<Integer> stat){
+    private int getMedian(ArrayList<Integer> stat){
         Collections.sort(stat);
 
         if (stat.size() % 2 == 0)
@@ -37,7 +37,7 @@ public class SeedAnalyser {
             return stat.get(stat.size() / 2);
     }
 
-    public double getStandardDeviation(ArrayList<Integer> stat) {
+    private double getStandardDeviation(ArrayList<Integer> stat) {
         double mean = getMean(stat);
         double total = 0;
 
@@ -84,7 +84,7 @@ public class SeedAnalyser {
 
     private JSONObject championDdragonData = getChampionDdragonData();
 
-    public ArrayList<String> getHistogramDamage(ArrayList<Integer> stat) {
+    private ArrayList<String> getHistogramDamage(ArrayList<Integer> stat) {
 
         ArrayList<Integer> damage1 = new ArrayList<>();
         ArrayList<Integer> damage2 = new ArrayList<>();
@@ -141,7 +141,7 @@ public class SeedAnalyser {
         return damage;
     }
 
-    public ArrayList<String> getHistogramTrueDamage(ArrayList<Integer> stat) {
+    private ArrayList<String> getHistogramTrueDamage(ArrayList<Integer> stat) {
         ArrayList<Integer> damage1 = new ArrayList<>();
         ArrayList<Integer> damage2 = new ArrayList<>();
         ArrayList<Integer> damage3 = new ArrayList<>();
@@ -174,7 +174,7 @@ public class SeedAnalyser {
         return damage;
     }
 
-    public ArrayList<String> getHistogramCs(ArrayList<Integer> cs) {
+    private ArrayList<String> getHistogramCs(ArrayList<Integer> cs) {
 
         ArrayList<Integer> cs000 = new ArrayList<>();
         ArrayList<Integer> cs050 = new ArrayList<>();
@@ -216,7 +216,7 @@ public class SeedAnalyser {
         return minions;
     }
 
-    public ArrayList gameHistogramTime(ArrayList<Integer> stat, String winLoss){
+    private ArrayList gameHistogramTime(ArrayList<Integer> stat, String winLoss){
         ArrayList<Integer> timeLessThan20 = new ArrayList<>();
         ArrayList<Integer> timeLessThan25 = new ArrayList<>();
         ArrayList<Integer> timeLessThan30 = new ArrayList<>();
@@ -257,26 +257,7 @@ public class SeedAnalyser {
         return frequency;
     }
 
-    public String getNameAndTitle(int key) {
-
-        JSONObject data = championDdragonData.getJSONObject("data");
-        Iterator<?> iterator = data.keys();
-
-        String name = "";
-        String title = "";
-
-        while (iterator.hasNext()) {
-            String k = (String) iterator.next();
-
-            if (data.getJSONObject(k).getInt("key") == key ) {
-                name = data.getJSONObject(k).getString("name");
-                title  = data.getJSONObject(k).getString("title");
-            }
-        }
-
-        return name + " - " + title;
-    }
-
+    //testing
     public void printStats(String statName, ArrayList<Integer> statList){
         if (!statList.isEmpty()) {
             //System.out.println(statName + " count: " + statList.size());
@@ -287,18 +268,6 @@ public class SeedAnalyser {
             System.out.println(statName + " standard deviation: " + getStandardDeviation(statList));
         }
     }
-
-    private Document docStats(Document doc, ArrayList stat){
-
-        doc.put("min", Collections.min(stat));
-        doc.put("max", Collections.max(stat));
-        doc.put("mean", getMean(stat));
-        doc.put("median", getMedian(stat));
-        doc.put("standardDeviation", getStandardDeviation(stat));
-
-        return doc;
-    }
-
 
     //analyse
     public void analyse (){
@@ -472,59 +441,6 @@ public class SeedAnalyser {
             analysedData.put("totalDamageTaken", totalDamageTakenDoc);
 
             collection.insertOne(analysedData);
-
-            /*System.out.println("champId: " + champion);
-            //System.out.println(getNameAndTitle(champion));
-            System.out.println();
-            System.out.println("Games analysed: " + count);
-            System.out.println();
-            printStats("Kills", kills);
-            System.out.println("Kills frequency (histogram): ");
-            printHistogramKDA(kills);
-            System.out.println();
-            printStats("Deaths", deaths);
-            System.out.println("Deaths frequency (histogram): ");
-            printHistogramKDA(deaths);
-            System.out.println();
-            printStats("Assists", assists);
-            System.out.println("Assists frequency (histogram): ");
-            printHistogramKDA(assists);
-            System.out.println();
-            printStats("Minion Kills", cs);
-            System.out.println("Minion Kills histogram: ");
-            printHistogramCs(cs);
-            System.out.println();
-            System.out.println("Wins : " + winTime.size());
-            System.out.println("Losses: " + lossTime.size());
-            System.out.println();
-            System.out.println("Win Time Histogram");
-            printGameTimeHistogram(winTime, "Win");
-            System.out.println();
-            System.out.println("Loss Time Histogram");
-            printGameTimeHistogram(lossTime, "Loss");
-            System.out.println();
-            printStats("Total Damage Dealt", totalDamageDealt);
-            System.out.println("Total Damage Dealt histogram: ");
-            printHistogramDamage(totalDamageDealt);
-            System.out.println();
-            printStats("Total Physical Damage Dealt", physicalDamageDealt);
-            System.out.println("Total Physical Damage Dealt histogram: ");
-            printHistogramDamage(physicalDamageDealt);
-            System.out.println();
-            printStats("Total Magic Damage Dealt", magicDamageDealt);
-            System.out.println("Total Magic Damage Dealt histogram: ");
-            printHistogramDamage(magicDamageDealt);
-            System.out.println();
-            printStats("Total True Damage Dealt", trueDamageDealt);
-            System.out.println("Total True Damage Dealt histogram: ");
-            printHistogramTrueDamage(trueDamageDealt);
-            System.out.println();
-            printStats("Total Damage Taken", totalDamageTaken);
-            System.out.println("Total Damage Taken histogram: ");
-            printHistogramDamage(totalDamageTaken);
-            System.out.println("---------------------------------------------");
-            System.out.println();
-            System.out.println();*/
         }
         System.out.println("Analysed Game Data Inserted");
     }
@@ -661,8 +577,8 @@ public class SeedAnalyser {
         }
     }
 
-    //Test insert
-    public String dataToMongo(){
+    //Gets first game from first seed data file
+    public String firstGame(){
         JSONObject matches = null;
 
         try {

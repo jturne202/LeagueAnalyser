@@ -2,11 +2,6 @@ package uk.panicdog.DataAnalyser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 
 @SpringBootApplication
 public class DataAnalyserApplication {
@@ -29,22 +24,5 @@ public class DataAnalyserApplication {
 		/*SeedAnalyser da = new SeedAnalyser();
 		da.analyse();*/
 
-		//Testing
-		//ArrayList<Integer> a = new ArrayList<>();
-		//a.add(2);
-		//a.add(3);
-		//a.add(4);
-		//a.add(17);
-		//a.add(20);
-		//a.add(14);
-		//a.add(23);
-		//a.add(8);
-		//a.add(12);
-		//a.add(9);
-		//
-		//SeedAnalyser s = new SeedAnalyser();
-		//System.out.println(s.getMean(a));
-		//System.out.println(s.getMedian(a));
-		//System.out.println(s.getStandardDeviation(a));
 	}
 }

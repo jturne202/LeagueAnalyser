@@ -60,6 +60,7 @@ public class ChampionController {
         return "7.17.2";
     }
 
+    //Gets JSON Object containing champion data
     private JSONObject getAllDdragonChampionData(String champion) {
         JSONObject ddragonData = null;
         try {
@@ -73,13 +74,12 @@ public class ChampionController {
         return ddragonData;
     }
 
+    //get champion id
     private int getChampionKey(String champion) {
-
-        int key = Integer.parseInt(getAllDdragonChampionData(champion).getJSONObject("data").getJSONObject(champion).getString("key"));
-
-        return key;
+        return Integer.parseInt(getAllDdragonChampionData(champion).getJSONObject("data").getJSONObject(champion).getString("key"));
     }
 
+    //Creates name and title string for given champion
     private String getChampionNameAndTitle(String champion) {
 
         String name = getAllDdragonChampionData(champion).getJSONObject("data").getJSONObject(champion).getString("name");
@@ -91,11 +91,6 @@ public class ChampionController {
     //Get champion picture for a given champion ie "Jax"
     private String getChampionStaticImage(String champion) {
         return "https://ddragon.leagueoflegends.com/cdn/" + getCurrentVersion() + "/img/champion/" + champion + ".png";
-    }
-
-    public int getChampionBaseStatsHP(String champion) {
-        int hp = getAllDdragonChampionData(champion).getJSONObject("data").getJSONObject(champion).getJSONObject("stats").getInt("hp");
-        return hp;
     }
 
     private ArrayList<JSONObject> mongoData(){
@@ -122,8 +117,7 @@ public class ChampionController {
         return c;
     }
 
-    //https://stackoverflow.com/questions/10948348/does-java-have-a-data-structure-that-stores-key-value-pairs-equivalent-to-idict?rq=1
-
+    //Get base stats for given champion
     private HashMap<String, Double> getChampionBaseStats(String champion) {
         HashMap<String, Double> baseStats = new HashMap<>();
 
@@ -148,6 +142,8 @@ public class ChampionController {
         return baseStats;
     }
 
+    //Gets average stats from mongodb for given champion
+    //query = stat wanted e.g. 'kills', 'totalDamageDealt'
     private HashMap<String, Double> getAverageStats(String champion, String query, MongoCollection collection) {
         HashMap<String, Double> stats = new HashMap<>();
 
@@ -168,6 +164,7 @@ public class ChampionController {
         return stats;
     }
 
+    //retrieves histograms from mongodb where the value is an integer
     private HashMap<String, String> getKDAHistogram(String champion, String query, MongoCollection collection) {
 
         List<String> list = null;
@@ -201,6 +198,7 @@ public class ChampionController {
         return sortedHashMap;
     }
 
+    //gets other histograms from mongodb
     private List<String> getHistogram(String champion, String query, MongoCollection collection) {
 
         List<String> list = null;
@@ -216,6 +214,8 @@ public class ChampionController {
         return list;
     }
 
+    //gets total wins or losses
+    //query1 can either be 'wins' or 'losses', and query2 can either be 'totalWins' or 'totalLosses' depending on query1
     private int getWinLoss(String champion, String query1, String query2, MongoCollection collection){
 
         int i = 0;
@@ -231,7 +231,7 @@ public class ChampionController {
     }
 
 
-    //Add attributes for html
+    //Add attributes for thymeleaf in the html
     @RequestMapping("/champion")
     public String champion(Model model, @RequestParam("champ")String champ) {
 
@@ -275,96 +275,42 @@ public class ChampionController {
         model.addAttribute("lossesFrequency", getHistogram(champ, "losses", collection));
 
         averageStats = getAverageStats(champ, "kills", collection);
-        /*model.addAttribute("minK", averageStats.get("min"));
-        model.addAttribute("maxK", averageStats.get("max"));
-        model.addAttribute("meanK",averageStats.get("mean"));
-        model.addAttribute("medianK", averageStats.get("median"));
-        model.addAttribute("standardDeviationK", averageStats.get("standardDeviation"));*/
         model.addAttribute("killsStats", averageStats);
         model.addAttribute("killsFrequency", getKDAHistogram(champ, "kills", collection));
 
         averageStats = getAverageStats(champ, "deaths", collection);
-        /*model.addAttribute("minD", averageStats.get("min"));
-        model.addAttribute("maxD", averageStats.get("max"));
-        model.addAttribute("meanD",averageStats.get("mean"));
-        model.addAttribute("medianD", averageStats.get("median"));
-        model.addAttribute("standardDeviationD", averageStats.get("standardDeviation"));*/
         model.addAttribute("deathsStats", averageStats);
         model.addAttribute("deathsFrequency", getKDAHistogram(champ, "deaths", collection));
 
         averageStats = getAverageStats(champ, "assists", collection);
-        /*model.addAttribute("minA", averageStats.get("min"));
-        model.addAttribute("maxA", averageStats.get("max"));
-        model.addAttribute("meanA",averageStats.get("mean"));
-        model.addAttribute("medianA", averageStats.get("median"));
-        model.addAttribute("standardDeviationA", averageStats.get("standardDeviation"));*/
         model.addAttribute("assistStats", averageStats);
         model.addAttribute("assistsFrequency", getKDAHistogram(champ, "assists", collection));
 
         averageStats = getAverageStats(champ, "cs", collection);
-        /*model.addAttribute("minC", averageStats.get("min"));
-        model.addAttribute("maxC", averageStats.get("max"));
-        model.addAttribute("meanC",averageStats.get("mean"));
-        model.addAttribute("medianC", averageStats.get("median"));
-        model.addAttribute("standardDeviationC", averageStats.get("standardDeviation"));*/
         model.addAttribute("csStats", averageStats);
         model.addAttribute("csFrequency", getHistogram(champ, "cs", collection));
 
         averageStats = getAverageStats(champ, "totalDamageDealt", collection);
-        /*model.addAttribute("minDD", averageStats.get("min"));
-        model.addAttribute("maxDD", averageStats.get("max"));
-        model.addAttribute("meanDD",averageStats.get("mean"));
-        model.addAttribute("medianDD", averageStats.get("median"));
-        model.addAttribute("standardDeviationDD", averageStats.get("standardDeviation"));*/
         model.addAttribute("totalDamageDealtStats", averageStats);
         model.addAttribute("totalDamageDealtFrequency", getHistogram(champ, "totalDamageDealt", collection));
 
         averageStats = getAverageStats(champ, "physicalDamageDealt", collection);
-        /*model.addAttribute("minP", averageStats.get("min"));
-        model.addAttribute("maxP", averageStats.get("max"));
-        model.addAttribute("meanP",averageStats.get("mean"));
-        model.addAttribute("medianP", averageStats.get("median"));
-        model.addAttribute("standardDeviationP", averageStats.get("standardDeviation"));*/
         model.addAttribute("physicalDamageDealtStats", averageStats);
         model.addAttribute("physicalDamageDealtFrequency", getHistogram(champ, "physicalDamageDealt", collection));
 
         averageStats = getAverageStats(champ, "magicDamageDealt", collection);
-        /*model.addAttribute("minM", averageStats.get("min"));
-        model.addAttribute("maxM", averageStats.get("max"));
-        model.addAttribute("meanM",averageStats.get("mean"));
-        model.addAttribute("medianM", averageStats.get("median"));
-        model.addAttribute("standardDeviationM", averageStats.get("standardDeviation"));*/
         model.addAttribute("magicDamageDealtStats", averageStats);
         model.addAttribute("magicDamageDealtFrequency", getHistogram(champ, "magicDamageDealt", collection));
 
         averageStats = getAverageStats(champ, "trueDamageDealt", collection);
-        /*model.addAttribute("minT", averageStats.get("min"));
-        model.addAttribute("maxT", averageStats.get("max"));
-        model.addAttribute("meanT",averageStats.get("mean"));
-        model.addAttribute("medianT", averageStats.get("median"));
-        model.addAttribute("standardDeviationT", averageStats.get("standardDeviation"));*/
         model.addAttribute("trueDealtStats", averageStats);
         model.addAttribute("trueDamageDealtFrequency", getHistogram(champ, "trueDamageDealt", collection));
 
         averageStats = getAverageStats(champ, "totalDamageTaken", collection);
-        /*model.addAttribute("minTD", averageStats.get("min"));
-        model.addAttribute("maxTD", averageStats.get("max"));
-        model.addAttribute("meanTD",averageStats.get("mean"));
-        model.addAttribute("medianTD", averageStats.get("median"));
-        model.addAttribute("standardDeviationTD", averageStats.get("standardDeviation"));*/
         model.addAttribute("totalDamageTakenStats", averageStats);
         model.addAttribute("totalDamageTakenFrequency", getHistogram(champ, "totalDamageTaken", collection));
 
-        /*model.addAttribute("killsFrequency", getHistogram(champ, "kills", collection));
-        model.addAttribute("deathsFrequency", getHistogram(champ, "deaths", collection));
-        model.addAttribute("assistsFrequency", getHistogram(champ, "assists", collection));
-        model.addAttribute("csFrequency", getHistogram(champ, "cs", collection));
-        model.addAttribute("totalDamageDealtFrequency", getHistogram(champ, "totalDamageDealt", collection));
-        model.addAttribute("physicalDamageDealtFrequency", getHistogram(champ, "physicalDamageDealt", collection));
-        model.addAttribute("magicDamageDealtFrequency", getHistogram(champ, "magicDamageDealt", collection));
-        model.addAttribute("trueDamageDealtFrequency", getHistogram(champ, "trueDamageDealt", collection));
-        model.addAttribute("totalDamageTakenFrequency", getHistogram(champ, "totalDamageTaken", collection));*/
-
+        //src/main/resources/templates/<return value>.html
         return "champion";
     }
 }

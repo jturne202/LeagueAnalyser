@@ -210,16 +210,20 @@ public class IndividualChampionData {
     //participantGameData
 
 
+    //takes seed data and turns it into rest controller
+    //this could be used to turn analysed data from mongo into rest controller
     @RequestMapping("/indi")
     public String indi(Model model) {
         return individualChampionData("https://s3-us-west-1.amazonaws.com/riot-developer-portal/seed-data/matches1.json").toString();
     }
 
+    //Gets first game from first seed data file
+    //rest controller containing that game data
     @RequestMapping("/game")
     public String game(Model model){
 
         SeedAnalyser s = new SeedAnalyser();
 
-        return s.dataToMongo();
+        return s.firstGame();
     }
 }
