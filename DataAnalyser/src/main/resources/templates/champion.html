@@ -1,0 +1,548 @@
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>League Analyser</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="css/DarkTheme/stylesheet.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
+</head>
+
+<body>
+
+    <div id="title">
+        <img class="head" th:src="${championStaticImage}"/>
+        <h1 class="head" th:text="${nameAndTitle}"/>
+    </div>
+
+    <!--<p th:text="${ddragonChampionData}" />-->
+
+    <div id="base-statistics">
+        <h2>Base Statistics</h2>
+
+        <table>
+            <tr>
+                <td>Health </td> <td th:text="${hp + ' +(' + hpperlevel + ')'}"/>
+            </tr>
+            <tr>
+                <td>Health Regen </td> <td th:text="${hpregen + ' +(' + hpregenperlevel+ ')'}"/>
+            </tr>
+            <tr>
+                <td>Mana Points </td> <td th:text="${mp  + ' +(' + mpperlevel+ ')'}"/>
+            </tr>
+            <tr>
+                <td>Attack Damage </td> <td th:text="${attackdamage  + ' +(' + attackdamageperlevel+ ')'}"/>
+            </tr>
+            <tr>
+                <td>Attack Speed </td> <td th:text="${attackspeed  + ' +(' + attackspeedperlevel+ ')'}"/>
+            </tr>
+            <tr>
+                <td>Armour </td> <td th:text="${armor  + ' +(' + armorperlevel+ ')'}"/>
+            </tr>
+            <tr>
+                <td>Magic Resist </td> <td th:text="${magicresist  + ' +(' + magicresistperlevel+ ')'}"/>
+            </tr>
+            <tr>
+                <td>Movement Speed </td> <td th:text="${movespeed}"/>
+            </tr>
+        </table>
+    </div>
+
+
+    <div id="average-stats">
+        <h2>Average Player-base Statistics</h2>
+
+        <div>
+
+            <table>
+                <th>Wins</th>
+                <tr>
+                    <td>Total Wins</td><td th:text="${wins}"/>
+                </tr>
+            </table>
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${winsFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <table>
+                <th>Losses</th>
+                <tr>
+                    <td>Total Losses</td><td th:text="${losses}"/>
+                </tr>
+            </table>
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${lossesFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Kills</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minK}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxK}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanK}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianK}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationK}"/>
+                </tr>
+                <tr>
+                    <td>Histogram</td>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Kills</th>
+                <tr th:each="item: ${killsStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr>
+                    <td>kills</td>
+                    <td>Frequency</td>
+                </tr>
+                <tr th:each="item: ${killsFrequency}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Deaths</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minD}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxD}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanD}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianD}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationD}"/>
+                </tr>
+                <tr>
+                    <td>Histogram</td>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Deaths</th>
+                <tr th:each="item: ${deathsStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr>
+                    <td>Deaths</td>
+                    <td>Frequency</td>
+                </tr>
+                <tr th:each="item: ${deathsFrequency}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Assists</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minA}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxA}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanA}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianA}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationA}"/>
+                </tr>
+                <tr>
+                    <td>Histogram</td>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Assists</th>
+                <tr th:each="item: ${assistStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr>
+                    <td>Assists</td>
+                    <td>Frequency</td>
+                </tr>
+                <tr th:each="item: ${assistsFrequency}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Minion Kills</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minC}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxC}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanC}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianC}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationC}"/>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Minion Kills</th>
+                <tr th:each="item: ${csStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${csFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Total Damage Dealt</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minDD}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxDD}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanDD}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianDD}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationDD}"/>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Total Damage Dealt</th>
+                <tr th:each="item: ${totalDamageDealtStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${totalDamageDealtFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Physical Damage Dealt</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minP}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxP}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanP}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianP}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationP}"/>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Physical Damage Dealt</th>
+                <tr th:each="item: ${physicalDamageDealtStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${physicalDamageDealtFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Magic Damage Dealt</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minM}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxM}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanM}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianM}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationM}"/>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Magic Damage Dealt</th>
+                <tr th:each="item: ${magicDamageDealtStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${magicDamageDealtFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>True Damage Dealt</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minT}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxT}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanT}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianT}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationT}"/>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>True Damage Dealt</th>
+                <tr th:each="item: ${trueDamageDealtStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${trueDamageDealtFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+        <div>
+
+            <!--<table>
+                <th>Total Damage Taken</th>
+                &lt;!&ndash;<tr>
+                    <td>Min</td><td th:text="${minTD}"/>
+                </tr>&ndash;&gt;
+                <tr>
+                    <td>Max</td><td th:text="${maxTD}"/>
+                </tr>
+                <tr>
+                    <td>Mean</td><td th:text="${meanTD}"/>
+                </tr>
+                <tr>
+                    <td>Median</td><td th:text="${medianTD}"/>
+                </tr>
+                <tr>
+                    <td>standard Deviation</td><td th:text="${standardDeviationTD}"/>
+                </tr>
+            </table>-->
+
+            <table>
+                <th>Total Damage Taken</th>
+                <tr th:each="item: ${totalDamageTakenStats}">
+                    <td th:text="${item.key}"/>
+                    <td th:text="${item.value}"/>
+                </tr>
+            </table>
+
+            <table>
+                <tr class="histogram-header">Histogram</tr>
+                <tr th:each="item: ${totalDamageTakenFrequency}">
+                    <td th:text="${item}"/>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!--<script th:inline="javascript">
+        /*<![CDATA[*/
+
+        var message = /*[[${nameAndTitle}]]*/ 'nameAndTitle';
+        console.log(message);
+
+        /*]]>*/
+    </script>-->
+
+    <!--<div id="diamond-statistics">
+        <H2>Average Diamond+ Champion DataParser</H2>
+        <table>
+            <tr>
+                <td>Win Rate</td> <td>xx.xx%</td>
+            </tr>
+            <tr>
+                <td>Win Time</td> <td>yy:yy</td>
+            </tr>
+            <tr>
+                <td>Kills</td> <td>k</td>
+            </tr>
+            <tr>
+                <td>Deaths</td> <td>d</td>
+            </tr>
+            <tr>
+                <td>Assists</td> <td>a</td>
+            </tr>
+            <tr>
+                <td>Gold Earned</td> <td>xxxxx</td>
+            </tr>
+            <tr>
+                <td>Creep Score</td> <td>xxx</td>
+            </tr>
+            <tr>
+                <td>Damage Dealt</td> <td>x</td>
+            </tr>
+            <tr>
+                <td>Physical Damage Dealt</td> <td>x</td>
+            </tr>
+            <tr>
+                <td>Magic Damage Dealt</td> <td>x</td>
+            </tr>
+            <tr>
+                <td>True Damage Dealt</td> <td>x</td>
+            </tr>
+            <tr>
+                <td>Damage taken</td> <td>x</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="abilites-order">
+        <h2>Highest Win Rate Ability Order </h2>
+        *custom table* <br/>
+        &nbsp;  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 <br/>
+        q x &nbsp;	&nbsp;	&nbsp;  x x<br/>
+        w 	&nbsp;  x<br/>
+        e 	&nbsp;	&nbsp;    x<br/>
+        r  	&nbsp;	&nbsp;	&nbsp;  x<br/>
+    </div>
+
+    <div id="summoners">
+        <h2>Highest Win Rate Summoner Spells</h2>
+        flash (icon) <br/>
+        teleport (icon)
+    </div>
+
+    <div id="starting-items">
+        <h2> Highest Win Rate Starting Items</h2>
+        item 1 (+ icon) item 2 (+ icon) item 3 (+ icon)...
+    </div>
+
+    <div id="final-build">
+        <h2>Highest Win Rate Final Build</h2>
+        item 1 > item 2 > item 3 > item 4 > item 5 > item 6...
+    </div>
+
+    <div id="runes">
+        <h2>Highest Win Rate Runes</h2>
+        main tree choice > secondary tree choice
+    </div>
+
+    <div>
+        <pre th:text="${mongoData}"/>
+    </div>-->
+
+</body>
+
+</html>

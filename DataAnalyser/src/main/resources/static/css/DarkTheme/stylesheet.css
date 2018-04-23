@@ -1,0 +1,45 @@
+body {
+    font-family: monospace;
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.75em;
+    font-size: 16px;
+    background-color: #222;
+    color: #ccc;
+}
+
+h1, h2, h3 {
+    font-family: 'Open Sans', sans-serif;
+}
+
+th {
+    text-decoration: underline;
+}
+
+.head {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 18px;
+    margin-left: 18px;
+}
+
+.histogram-header {
+    text-decoration: underline;
+}
+
+#base-statistics {
+    margin: 18px;
+}
+
+#average-stats > div {
+    /*display: inline-block;*/
+    margin: 18px;
+}
+
+#average-stats > h2 {
+    margin: 18px;
+}
+
+td {
+    padding-right: 10px;
+}
+
