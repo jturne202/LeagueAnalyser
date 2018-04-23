@@ -7,13 +7,13 @@ This project aims to parse league of legends games, analyse them, and provide th
 ## Project Layout
 
 1. DataParser
-	*Parses JSON seed data.
-	*Stores in mongodb
+	* Parses JSON seed data.
+	* Stores in mongodb
 2. SeedAnalyser 
-	*Analyses data stored in mongodb
-	*Stores results in mongodb
+	* Analyses data stored in mongodb
+	* Stores results in mongodb
 3. ChampionController
-	*Shows results to user
+	* Shows results to user
 
 ## Future Work
 
