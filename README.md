@@ -14,6 +14,9 @@ This project aims to parse league of legends games, analyse them, and provide th
 	* Stores results in mongodb
 3. ChampionController
 	* Shows results to user
+4. Data
+	* Mongo data containing testdb
+	* testdb has two collections, participantGameData and analysedGameData
 
 ## Future Work
 
