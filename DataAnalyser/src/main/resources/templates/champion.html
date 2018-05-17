@@ -3,7 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>League Analyser</title>
+    <title th:text="${nameAndTitle}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="css/DarkTheme/stylesheet.css"/>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
@@ -11,22 +11,29 @@
 
 <body>
 
+    <div id="top-nav">
+        <div id="search">
+            <form action="#" th:action="@{/champion}" th:object="${search}" method="post">
+                <input type="text" placeholder="Search Champions.." autocomplete="off" th:field="*{query}" />
+            </form>
+        </div>
+    </div>
+
+
     <div id="title">
         <img class="head" th:src="${championStaticImage}"/>
         <h1 class="head" th:text="${nameAndTitle}"/>
     </div>
-
-    <!--<p th:text="${ddragonChampionData}" />-->
 
     <div id="base-statistics">
         <h2>Base Statistics</h2>
 
         <table>
             <tr>
-                <td>Health </td> <td th:text="${hp + ' +(' + hpperlevel + ')'}"/>
+                <td>Health </td> <td th:text="${hp + ' +(' + hpperlevel + ')'}"></td>
             </tr>
             <tr>
-                <td>Health Regen </td> <td th:text="${hpregen + ' +(' + hpregenperlevel+ ')'}"/>
+                <td>Health Regen </td> <td th:text="${hpregen + ' +(' + hpregenperlevel+ ')'}"></td>
             </tr>
             <tr>
                 <td>Mana Points </td> <td th:text="${mp  + ' +(' + mpperlevel+ ')'}"/>
@@ -55,14 +62,15 @@
 
         <div>
 
-            <table>
-                <th>Wins</th>
+            <table class="average-table">
+                <td class="average-table-header">Wins</td>
                 <tr>
                     <td>Total Wins</td><td th:text="${wins}"/>
                 </tr>
             </table>
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${winsFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -72,14 +80,15 @@
 
         <div>
 
-            <table>
-                <th>Losses</th>
+            <table class="average-table">
+                <td class="average-table-header">Losses</td>
                 <tr>
                     <td>Total Losses</td><td th:text="${losses}"/>
                 </tr>
             </table>
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${lossesFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -89,16 +98,16 @@
 
         <div>
 
-            <table>
-                <th>Kills</th>
+            <table class="average-table">
+                <td class="average-table-header">Kills</td>
                 <tr th:each="item: ${killsStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr>
                     <td>kills</td>
                     <td>Frequency</td>
@@ -113,16 +122,16 @@
 
         <div>
 
-            <table>
-                <th>Deaths</th>
+            <table class="average-table">
+                <td class="average-table-header">Deaths</td>
                 <tr th:each="item: ${deathsStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr>
                     <td>Deaths</td>
                     <td>Frequency</td>
@@ -137,16 +146,16 @@
 
         <div>
 
-            <table>
-                <th>Assists</th>
+            <table class="average-table">
+                <td class="average-table-header">Assists</td>
                 <tr th:each="item: ${assistStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr>
                     <td>Assists</td>
                     <td>Frequency</td>
@@ -161,16 +170,16 @@
 
         <div>
 
-            <table>
-                <th>Minion Kills</th>
+            <table class="average-table">
+                <td  class="average-table-header">Minion Kills</td>
                 <tr th:each="item: ${csStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${csFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -181,16 +190,16 @@
 
         <div>
 
-            <table>
-                <th>Total Damage Dealt</th>
+            <table class="average-table">
+                <td class="average-table-header">Total Damage Dealt</td>
                 <tr th:each="item: ${totalDamageDealtStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${totalDamageDealtFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -200,16 +209,16 @@
 
         <div>
 
-            <table>
-                <th>Physical Damage Dealt</th>
+            <table class="average-table">
+                <td class="average-table-header">Physical Damage Dealt</td>
                 <tr th:each="item: ${physicalDamageDealtStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${physicalDamageDealtFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -219,16 +228,16 @@
 
         <div>
 
-            <table>
-                <th>Magic Damage Dealt</th>
+            <table class="average-table">
+                <td class="average-table-header">Magic Damage Dealt</td>
                 <tr th:each="item: ${magicDamageDealtStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${magicDamageDealtFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -238,16 +247,16 @@
 
         <div>
 
-            <table>
-                <th>True Damage Dealt</th>
+            <table class="average-table">
+                <td class="average-table-header">True Damage Dealt</td>
                 <tr th:each="item: ${trueDamageDealtStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${trueDamageDealtFrequency}">
                     <td th:text="${item}"/>
                 </tr>
@@ -257,16 +266,16 @@
 
         <div>
 
-            <table>
-                <th>Total Damage Taken</th>
+            <table class="average-table">
+                <td class="average-table-header">Total Damage Taken</td>
                 <tr th:each="item: ${totalDamageTakenStats}">
                     <td th:text="${item.key}"/>
                     <td th:text="${item.value}"/>
                 </tr>
             </table>
 
-            <table>
-                <tr class="histogram-header">Histogram</tr>
+            <table class="histogram-table">
+                <tr class="histogram-table-header"><td>Histogram</td></tr>
                 <tr th:each="item: ${totalDamageTakenFrequency}">
                     <td th:text="${item}"/>
                 </tr>

@@ -1,10 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Home</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="css/DarkTheme/stylesheet.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
 </head>
+
 <body>
-$END$
+
+    <div id="top-nav">
+        <div id="search">
+            <form action="#" th:action="@{/champion}" th:object="${search}" method="post">
+                <input type="text" placeholder="Search Champions.." autocomplete="off" th:field="*{query}" />
+            </form>
+        </div>
+    </div>
+
+    <p id="notFound" th:text="${notFound}"></p>
+
 </body>
 </html>

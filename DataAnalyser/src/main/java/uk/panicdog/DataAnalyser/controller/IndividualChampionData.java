@@ -2,6 +2,7 @@ package uk.panicdog.DataAnalyser.controller;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import uk.panicdog.DataAnalyser.SeedAnalyser;
 import java.io.IOException;
 
 @RestController
+//@Controller
 public class IndividualChampionData {
 
     @SuppressWarnings("Duplicates")

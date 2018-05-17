@@ -10,9 +10,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import uk.panicdog.DataAnalyser.JSONReader;
+import uk.panicdog.DataAnalyser.model.Search;
 
 import java.io.IOException;
 import java.util.*;
@@ -60,17 +62,25 @@ public class ChampionController {
         return "7.17.2";
     }
 
+    private boolean checkExists(String query){
+        JSONObject ddragonData = null;
+        try {
+            ddragonData = jr.readJsonObjectFromUrl("http://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion/" + query + ".json");
+        } catch (JSONException | IOException e) {
+            //e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     //Gets JSON Object containing champion data
     private JSONObject getAllDdragonChampionData(String champion) {
         JSONObject ddragonData = null;
         try {
             ddragonData = jr.readJsonObjectFromUrl("http://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion/" + champion + ".json");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-
         return ddragonData;
     }
 
@@ -154,7 +164,7 @@ public class ChampionController {
 
             Document d = doc.get(query, Document.class);
 
-            stats.put("Minimum", Double.parseDouble(d.get("min").toString()));
+            //stats.put("Minimum", Double.parseDouble(d.get("min").toString()));
             stats.put("Maximum", Double.parseDouble(d.get("max").toString()));
             stats.put("Mean", Double.parseDouble(d.get("mean").toString()));
             stats.put("Median", Double.parseDouble(d.get("median").toString()));
@@ -230,10 +240,25 @@ public class ChampionController {
         return i;
     }
 
+    // sets first letter to capital letter and rest to lower case to handle user input for search functionality
+    private String capitalizeFirstLetter(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        return original.substring(0, 1).toUpperCase() + original.substring(1).toLowerCase();
+    }
+
 
     //Add attributes for thymeleaf in the html
-    @RequestMapping("/champion")
-    public String champion(Model model, @RequestParam("champ")String champ) {
+    @RequestMapping(value = "/champion")
+    public String champion(Model model, @ModelAttribute("search") Search search) {
+
+        if (!checkExists(capitalizeFirstLetter(search.getQuery()))){
+            model.addAttribute("notFound", ("Champion \'" + search.getQuery() + "\' not found"));
+            return "index";
+        }
+
+        String champ = capitalizeFirstLetter(search.getQuery());
 
         //Champion name and title
         model.addAttribute("nameAndTitle", getChampionNameAndTitle(champ));
@@ -303,14 +328,24 @@ public class ChampionController {
         model.addAttribute("magicDamageDealtFrequency", getHistogram(champ, "magicDamageDealt", collection));
 
         averageStats = getAverageStats(champ, "trueDamageDealt", collection);
-        model.addAttribute("trueDealtStats", averageStats);
+        model.addAttribute("trueDamageDealtStats", averageStats);
         model.addAttribute("trueDamageDealtFrequency", getHistogram(champ, "trueDamageDealt", collection));
 
         averageStats = getAverageStats(champ, "totalDamageTaken", collection);
         model.addAttribute("totalDamageTakenStats", averageStats);
         model.addAttribute("totalDamageTakenFrequency", getHistogram(champ, "totalDamageTaken", collection));
 
+        mongoClient.close();
         //src/main/resources/templates/<return value>.html
         return "champion";
+    }
+
+    //index controller
+    @RequestMapping("/")
+    public String index(Model model){
+
+        model.addAttribute("search", new Search());
+
+        return "index";
     }
 }
